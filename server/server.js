@@ -1,3 +1,4 @@
+const {ObjectID} = require('mongodb');
 var express = require('express');
 var bodyParser = require('body-parser');
 
@@ -29,6 +30,34 @@ app.get('/todos', (req, res) =>{
     },(e) =>{
         res.status(400).send(e);
     });
+})
+
+// GET /todos/1234324
+app.get('/todos/:id', (req, res) => {
+    
+    var id = req.params.id;
+    // valid id using isValid
+    if (!ObjectID.isValid(id)){
+        return res.status(404).send();
+        // 404 send back empty body
+    };
+
+        // findById
+    Todo.findById(id).then((todos)=>{
+    // success
+        // if no todo - send back 4040 with empty body
+        if(!todos){
+            return res.status(404).send();
+        }        
+        // id todo - send it back
+        res.send({todos});
+    }).catch((e) => {
+    // error
+        res.status(400).send();
+        //400 - send back empty bodynothing
+    });
+
+
 })
 
 
