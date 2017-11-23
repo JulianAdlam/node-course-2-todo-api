@@ -78,7 +78,7 @@ app.delete('/todos/:id', (req, res) => {
             return res.status(404).send();
         }        
         // id todo - send it back with 200
-        res.status(200).send({todo});
+        res.send({todo});
     }).catch((e) => {
     // error
         res.status(400).send();

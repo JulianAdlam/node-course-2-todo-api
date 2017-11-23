@@ -23,7 +23,7 @@ beforeEach ((done)=>{
 
 
 describe('POST /todos', ()=>{
-    it('should crete a new todo', (done)=>{
+    it('should create a new todo', (done)=>{
         var text = 'Test todo text';
 
         request(app)
@@ -87,7 +87,7 @@ describe('GET /todos/:id', ()=>{
         .get(`/todos/${todos[0]._id.toHexString()}`)
         .expect(200)
         .expect((res)=>{
-            expect(res.body.todos.text).toBe(todos[0].text);
+            expect(res.body.todo.text).toBe(todos[0].text);
         })
         .end(done);
     });
@@ -108,3 +108,29 @@ describe('GET /todos/:id', ()=>{
     });
 });
 
+describe('DELETE /todos/:id', ()=>{
+    it('Should delete todo doc', (done)=>{
+        request(app)
+        .delete(`/todos/${todos[0]._id.toHexString()}`)
+        .expect(200)
+        .expect((res)=>{
+            expect(res.body.todo.text).toBe(todos[0].text);
+        })
+        .end(done);
+    });
+
+    var hexID = new ObjectID().toHexString();
+    it('should return a 404 if doc not found', (done)=>{
+        request(app)
+        .delete(`/todos/${hexID}`)
+        .expect(404)
+        .end(done);
+    });
+
+    it('should return a 404 for non-object IDs', (done)=>{
+        request(app)
+        .delete('/todos/1234')
+        .expect(404)
+        .end(done);
+    });
+});
