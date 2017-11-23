@@ -43,22 +43,50 @@ app.get('/todos/:id', (req, res) => {
     };
 
         // findById
-    Todo.findById(id).then((todos)=>{
+    Todo.findById(id).then((todo)=>{
     // success
-        // if no todo - send back 4040 with empty body
-        if(!todos){
+        // if no todo - send back 404 with empty body
+        if(!todo){
             return res.status(404).send();
         }        
         // id todo - send it back
-        res.send({todos});
+        res.send({todo});
     }).catch((e) => {
     // error
         res.status(400).send();
-        //400 - send back empty bodynothing
+        //400 - send back empty body
     });
 
 
-})
+});
+
+// DELETE /todos/1234324
+app.delete('/todos/:id', (req, res) => {
+    // get the id
+    var id = req.params.id;
+    // validate the id -> not valid? return 404
+    if (!ObjectID.isValid(id)){
+        return res.status(404).send();
+        // 404 send back empty body
+    };
+
+    // remove todo by id
+    Todo.findByIdAndRemove(id).then((todo)=>{
+    // success
+        // if no todo -> send back 404 with empty body
+        if(!todo){
+            return res.status(404).send();
+        }        
+        // id todo - send it back with 200
+        res.status(200).send({todo});
+    }).catch((e) => {
+    // error
+        res.status(400).send();
+        //400 - send back empty body
+    });
+
+
+});
 
 
 app.listen(port, () => {
